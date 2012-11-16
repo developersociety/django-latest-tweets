@@ -1,12 +1,13 @@
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from django.utils.timezone import utc
 from datetime import datetime
-from twitter import Twitter
+from twitter import Twitter, OAuth
 from latest_tweets.models import Tweet
 
 
 def update_user(user):
-    t = Twitter()
+    t = Twitter(auth=OAuth(settings.TWITTER_OAUTH_TOKEN, settings.TWITTER_OAUTH_SECRET, settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET))
     messages = t.statuses.user_timeline(screen_name=user, include_rts=True)
 
     for i in messages:
