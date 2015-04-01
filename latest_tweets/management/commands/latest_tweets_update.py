@@ -4,7 +4,7 @@ from django.utils.timezone import utc
 from datetime import datetime
 from twitter import Twitter, OAuth
 from latest_tweets.models import Tweet
-import HTMLParser
+from django.utils.six.moves import html_parser
 
 
 def update_user(user):
@@ -12,7 +12,7 @@ def update_user(user):
     messages = t.statuses.user_timeline(screen_name=user, include_rts=True)
 
     # Need to escape HTML entities
-    htmlparser = HTMLParser.HTMLParser()
+    htmlparser = html_parser.HTMLParser()
     unescape = htmlparser.unescape
 
     for i in messages:
