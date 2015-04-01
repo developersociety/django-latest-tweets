@@ -15,7 +15,7 @@ setup(
     maintainer_email='alex@blanc.ltd.uk',
     platforms=['any'],
     install_requires=[
-        'twitter==1.9.0',
+        'twitter>=1.9.1',
     ],
     packages=[
         'latest_tweets',
