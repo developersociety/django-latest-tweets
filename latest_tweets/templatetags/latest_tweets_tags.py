@@ -5,10 +5,14 @@ register = template.Library()
 
 
 @register.assignment_tag
-def get_latest_tweets(user, amount=None):
-    tweets = Tweet.objects.filter(user=user)
+def get_latest_tweets(*args, **kwargs):
+    limit = kwargs.pop('limit', None)
+    tweets = Tweet.objects.all()
 
-    if amount is not None:
-        tweets = tweets[:amount]
+    if args:
+        tweets = tweets.filter(user__in=args)
+
+    if limit is not None:
+        tweets = tweets[:limit]
 
     return tweets
