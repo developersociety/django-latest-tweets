@@ -20,6 +20,10 @@ def update_user(user):
     htmlparser = html_parser.HTMLParser()
     unescape = htmlparser.unescape
 
+    # To ensure we delete any deleted tweets
+    oldest_date = None
+    tweet_id_list = []
+
     for i in messages:
         tweet_id = i['id']
         tweet_username = i['user']['screen_name']
@@ -33,6 +37,15 @@ def update_user(user):
             'text': tweet_text,
             'created': tweet_created,
         })
+
+        # Help prune out deleted tweets
+        if not oldest_date or tweet_created < oldest_date:
+            oldest_date = tweet_created
+
+        tweet_id_list.append(obj.id)
+
+    # Remove any deleted tweets in our date range
+    Tweet.objects.filter(user=user, created__gt=oldest_date).exclude(id__in=tweet_id_list).delete()
 
 
 class Command(BaseCommand):
