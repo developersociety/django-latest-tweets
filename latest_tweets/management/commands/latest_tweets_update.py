@@ -29,14 +29,26 @@ def update_user(user):
     for i in messages:
         tweet_id = i['id']
         tweet_username = i['user']['screen_name']
-        tweet_text = unescape(i['text'])
         tweet_created = datetime.strptime(
             i['created_at'], '%a %b %d %H:%M:%S +0000 %Y'
         ).replace(tzinfo=utc)
 
+        if 'retweeted_status' in i:
+            retweeted_username = i['retweeted_status']['user']['screen_name']
+            retweeted_tweet_id = i['retweeted_status']['id']
+            tweet_text = i['retweeted_status']['text']
+        else:
+            retweeted_username = ''
+            retweeted_tweet_id = None
+            tweet_text = i['text']
+
+        tweet_text = unescape(tweet_text)
+
         obj, created = Tweet.objects.update_or_create(tweet_id=tweet_id, defaults={
             'user': tweet_username,
             'text': tweet_text,
+            'retweeted_username': retweeted_username,
+            'retweeted_tweet_id': retweeted_tweet_id,
             'created': tweet_created,
         })
 
