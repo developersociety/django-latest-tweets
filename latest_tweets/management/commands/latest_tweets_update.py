@@ -29,6 +29,7 @@ def update_user(user):
     for i in messages:
         tweet_id = i['id']
         tweet_username = i['user']['screen_name']
+        tweet_name = i['user']['name']
         tweet_created = datetime.strptime(
             i['created_at'], '%a %b %d %H:%M:%S +0000 %Y'
         ).replace(tzinfo=utc)
@@ -36,10 +37,12 @@ def update_user(user):
 
         if 'retweeted_status' in i:
             retweeted_username = i['retweeted_status']['user']['screen_name']
+            retweeted_name = i['retweeted_status']['user']['name']
             retweeted_tweet_id = i['retweeted_status']['id']
             tweet_text = i['retweeted_status']['text']
         else:
             retweeted_username = ''
+            retweeted_name = ''
             retweeted_tweet_id = None
             tweet_text = i['text']
 
@@ -47,8 +50,10 @@ def update_user(user):
 
         obj, created = Tweet.objects.update_or_create(tweet_id=tweet_id, defaults={
             'user': tweet_username,
+            'name': tweet_name,
             'text': tweet_text,
             'retweeted_username': retweeted_username,
+            'retweeted_name': retweeted_name,
             'retweeted_tweet_id': retweeted_tweet_id,
             'is_reply': tweet_is_reply,
             'created': tweet_created,
