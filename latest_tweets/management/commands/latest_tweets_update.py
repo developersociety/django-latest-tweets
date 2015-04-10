@@ -32,6 +32,7 @@ def update_user(user):
         tweet_created = datetime.strptime(
             i['created_at'], '%a %b %d %H:%M:%S +0000 %Y'
         ).replace(tzinfo=utc)
+        tweet_is_reply = i['in_reply_to_screen_name'] is not None
 
         if 'retweeted_status' in i:
             retweeted_username = i['retweeted_status']['user']['screen_name']
@@ -49,6 +50,7 @@ def update_user(user):
             'text': tweet_text,
             'retweeted_username': retweeted_username,
             'retweeted_tweet_id': retweeted_tweet_id,
+            'is_reply': tweet_is_reply,
             'created': tweet_created,
         })
 

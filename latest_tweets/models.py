@@ -9,6 +9,7 @@ class Tweet(models.Model):
     text = models.CharField(max_length=250)
     retweeted_username = models.CharField(max_length=20, blank=True)
     retweeted_tweet_id = models.BigIntegerField(null=True, blank=True)
+    is_reply = models.BooleanField(default=False, db_index=True)
     created = models.DateTimeField(db_index=True)
 
     class Meta:
