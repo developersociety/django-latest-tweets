@@ -4,13 +4,13 @@ from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class Tweet(models.Model):
-    tweet_id = models.BigIntegerField(unique=True)
+    tweet_id = models.BigIntegerField('Tweet ID', unique=True)
     user = models.CharField(max_length=15, db_index=True)
     name = models.CharField(max_length=20)
     text = models.CharField(max_length=250)
     retweeted_username = models.CharField(max_length=20, blank=True)
     retweeted_name = models.CharField(max_length=20, blank=True)
-    retweeted_tweet_id = models.BigIntegerField(null=True, blank=True)
+    retweeted_tweet_id = models.BigIntegerField('Retweeted tweet ID', null=True, blank=True)
     is_reply = models.BooleanField(default=False, db_index=True)
     created = models.DateTimeField(db_index=True)
 
