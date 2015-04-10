@@ -5,7 +5,7 @@ from django.utils.encoding import python_2_unicode_compatible
 @python_2_unicode_compatible
 class Tweet(models.Model):
     tweet_id = models.BigIntegerField(unique=True)
-    user = models.CharField(max_length=20, db_index=True)
+    user = models.CharField(max_length=15, db_index=True)
     text = models.CharField(max_length=250)
     retweeted_username = models.CharField(max_length=20, blank=True)
     retweeted_tweet_id = models.BigIntegerField(null=True, blank=True)
