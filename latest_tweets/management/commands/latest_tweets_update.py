@@ -28,7 +28,7 @@ def update_user(user):
             i['created_at'], '%a %b %d %H:%M:%S +0000 %Y'
         ).replace(tzinfo=utc)
 
-        obj, created = Tweet.objects.get_or_create(tweet_id=tweet_id, defaults={
+        obj, created = Tweet.objects.update_or_create(tweet_id=tweet_id, defaults={
             'user': tweet_username,
             'text': tweet_text,
             'created': tweet_created,
