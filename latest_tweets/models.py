@@ -22,3 +22,12 @@ class Tweet(models.Model):
 
     def get_absolute_url(self):
         return 'https://twitter.com/%s/status/%s' % (self.user, self.tweet_id)
+
+    def user_url(self):
+        return 'https://twitter.com/%s' % (self.user,)
+
+    def retweeted_user_url(self):
+        if self.retweeted_username:
+            return 'https://twitter.com/%s' % (self.retweeted_username,)
+        else:
+            return None
