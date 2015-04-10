@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.db import transaction
 from django.utils.timezone import utc
 from datetime import datetime
 from twitter import Twitter, OAuth
@@ -7,6 +8,7 @@ from latest_tweets.models import Tweet
 from django.utils.six.moves import html_parser
 
 
+@transaction.atomic
 def update_user(user):
     t = Twitter(auth=OAuth(
         settings.TWITTER_OAUTH_TOKEN,
