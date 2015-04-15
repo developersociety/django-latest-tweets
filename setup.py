@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 # Use latest_tweets.VERSION for version numbers
 version_tuple = __import__('latest_tweets').VERSION
@@ -17,12 +17,7 @@ setup(
     install_requires=[
         'twitter>=1.9.1',
     ],
-    packages=[
-        'latest_tweets',
-        'latest_tweets.management',
-        'latest_tweets.management.commands',
-        'latest_tweets.templatetags',
-    ],
+    packages=find_packages(),
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
