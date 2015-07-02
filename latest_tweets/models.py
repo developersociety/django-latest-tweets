@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -33,3 +34,27 @@ class Tweet(models.Model):
             return 'https://twitter.com/%s' % (self.retweeted_username,)
         else:
             return None
+
+
+@python_2_unicode_compatible
+class Photo(models.Model):
+    tweet = models.ForeignKey(Tweet, related_name='photos')
+    photo_id = models.BigIntegerField('Photo ID', unique=True)
+    text = models.CharField(max_length=250)
+    text_index = models.PositiveIntegerField(db_index=True)
+    url = models.URLField('URL')
+    media_url = models.URLField('Media URL')
+    large_width = models.PositiveIntegerField()
+    large_height = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ('tweet', 'text_index')
+
+    def __str__(self):
+        return self.text
+
+    def get_absolute_url(self):
+        return self.url
+
+    def large_url(self):
+        return '%s:large' % (self.media_url,)

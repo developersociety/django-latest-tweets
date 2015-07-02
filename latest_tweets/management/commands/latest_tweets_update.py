@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.six.moves import html_parser
 from django.utils.timezone import utc
-from latest_tweets.models import Tweet
+from latest_tweets.models import Photo, Tweet
 from twitter import OAuth, Twitter
 
 
@@ -47,6 +47,26 @@ def tweet_html_entities(tweet, **kwargs):
         text[start + 1:end] = [''] * (end - start - 1)
 
     return ''.join(text)
+
+
+def tweet_photos(obj, media):
+    for photo in media:
+        # Only photos
+        if photo['type'] != 'photo':
+            continue
+
+        photo_id = photo['id']
+        large = photo['sizes']['large']
+
+        obj, created = Photo.objects.update_or_create(photo_id=photo_id, defaults={
+            'tweet': obj,
+            'text': photo['display_url'],
+            'text_index': photo['indices'][0],
+            'url': photo['url'],
+            'media_url': photo['media_url_https'],
+            'large_width': int(large['w']),
+            'large_height': int(large['h']),
+        })
 
 
 @transaction.atomic
@@ -102,6 +122,9 @@ def update_user(user):
             'is_reply': tweet_is_reply,
             'created': tweet_created,
         })
+
+        # Add any photos
+        tweet_photos(obj=obj, media=i['entities'].get('media', []))
 
         # Help prune out deleted tweets
         if not oldest_date or tweet_created < oldest_date:

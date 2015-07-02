@@ -1,5 +1,22 @@
 from django.contrib import admin
-from .models import Tweet
+
+from .models import Photo, Tweet
+
+
+class PhotoInline(admin.StackedInline):
+    model = Photo
+    readonly_fields = ('photo_id', 'url', 'media_url', 'large_width', 'large_height')
+    fieldsets = (
+        (None, {
+            'fields': readonly_fields,
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Tweet)
@@ -15,6 +32,7 @@ class TweetAdmin(admin.ModelAdmin):
             'fields': readonly_fields,
         }),
     )
+    inlines = [PhotoInline]
 
     def has_add_permission(self, request):
         return False
