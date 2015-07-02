@@ -102,12 +102,16 @@ def update_user(user):
             retweeted_tweet_id = i['retweeted_status']['id']
             tweet_text = i['retweeted_status']['text']
             tweet_html = tweet_html_entities(tweet_text, **i['retweeted_status']['entities'])
+            favorite_count = i['retweeted_status']['favorite_count']
+            retweet_count = i['retweeted_status']['retweet_count']
         else:
             retweeted_username = ''
             retweeted_name = ''
             retweeted_tweet_id = None
             tweet_text = i['text']
             tweet_html = tweet_html_entities(tweet_text, **i['entities'])
+            favorite_count = i['favorite_count']
+            retweet_count = i['retweet_count']
 
         tweet_text = unescape(tweet_text)
 
@@ -116,6 +120,8 @@ def update_user(user):
             'name': tweet_name,
             'text': tweet_text,
             'html': tweet_html,
+            'favorite_count': favorite_count,
+            'retweet_count': retweet_count,
             'retweeted_username': retweeted_username,
             'retweeted_name': retweeted_name,
             'retweeted_tweet_id': retweeted_tweet_id,

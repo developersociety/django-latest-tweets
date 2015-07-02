@@ -11,6 +11,8 @@ class Tweet(models.Model):
     name = models.CharField(max_length=20)
     text = models.CharField(max_length=250)
     html = models.TextField('HTML')
+    favorite_count = models.PositiveIntegerField(default=0)
+    retweet_count = models.PositiveIntegerField(default=0)
     retweeted_username = models.CharField(max_length=20, blank=True)
     retweeted_name = models.CharField(max_length=20, blank=True)
     retweeted_tweet_id = models.BigIntegerField('Retweeted tweet ID', null=True, blank=True)
