@@ -9,7 +9,7 @@ class Tweet(models.Model):
     user = models.CharField(max_length=15, db_index=True)
     name = models.CharField(max_length=20)
     text = models.CharField(max_length=250)
-    html = models.TextField()
+    html = models.TextField('HTML')
     retweeted_username = models.CharField(max_length=20, blank=True)
     retweeted_name = models.CharField(max_length=20, blank=True)
     retweeted_tweet_id = models.BigIntegerField('Retweeted tweet ID', null=True, blank=True)

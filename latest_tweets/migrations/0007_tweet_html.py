@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='tweet',
             name='html',
-            field=models.TextField(default=''),
+            field=models.TextField(default='', verbose_name='HTML'),
             preserve_default=False,
         ),
     ]
