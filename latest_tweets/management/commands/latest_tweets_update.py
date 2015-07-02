@@ -1,12 +1,15 @@
 from __future__ import unicode_literals
-from django.core.management.base import BaseCommand
-from django.conf import settings
-from django.db import transaction
-from django.utils.timezone import utc
+
+
 from datetime import datetime
-from twitter import Twitter, OAuth
-from latest_tweets.models import Tweet
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from django.db import transaction
 from django.utils.six.moves import html_parser
+from django.utils.timezone import utc
+from latest_tweets.models import Tweet
+from twitter import OAuth, Twitter
 
 
 HASHTAG_HTML = '<a href="https://twitter.com/hashtag/{text}" target="_blank">#{text}</a>'
