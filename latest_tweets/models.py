@@ -41,7 +41,7 @@ class Tweet(models.Model):
 @python_2_unicode_compatible
 class Photo(models.Model):
     tweet = models.ForeignKey(Tweet, related_name='photos')
-    photo_id = models.BigIntegerField('Photo ID', unique=True)
+    photo_id = models.BigIntegerField('Photo ID')
     text = models.CharField(max_length=250)
     text_index = models.PositiveIntegerField(db_index=True)
     url = models.URLField('URL')
@@ -51,6 +51,9 @@ class Photo(models.Model):
 
     class Meta:
         ordering = ('tweet', 'text_index')
+        unique_together = (
+            ('tweet', 'photo_id'),
+        )
 
     def __str__(self):
         return self.text

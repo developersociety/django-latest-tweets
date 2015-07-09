@@ -54,8 +54,7 @@ def tweet_photos(obj, media):
         photo_id = photo['id']
         large = photo['sizes']['large']
 
-        obj, created = Photo.objects.update_or_create(photo_id=photo_id, defaults={
-            'tweet': obj,
+        obj, created = Photo.objects.update_or_create(tweet=obj, photo_id=photo_id, defaults={
             'text': photo['display_url'],
             'text_index': photo['indices'][0],
             'url': photo['url'],
