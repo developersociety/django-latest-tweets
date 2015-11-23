@@ -3,8 +3,8 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from twitter import OAuth, Twitter
 
-from ..models import Tweet
-from ..utils import update_tweets
+from latest_tweets.models import Tweet
+from latest_tweets.utils import update_tweets
 
 
 @transaction.atomic
