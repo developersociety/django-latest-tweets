@@ -11,8 +11,8 @@ setup(
     description='Latest Tweets for Django',
     long_description=open('README.rst').read(),
     url='https://github.com/blancltd/django-latest-tweets',
-    maintainer='Alex Tomkins',
-    maintainer_email='alex@blanc.ltd.uk',
+    maintainer='Blanc Ltd',
+    maintainer_email='studio@blanc.ltd.uk',
     platforms=['any'],
     install_requires=[
         'twitter>=1.9.1',
