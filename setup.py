@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 # Use latest_tweets.VERSION for version numbers
 version_tuple = __import__('latest_tweets').VERSION
@@ -25,5 +25,5 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
     ],
-    license='BSD-2',
+    license='BSD',
 )
