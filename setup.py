@@ -8,13 +8,9 @@ with open('README.rst', 'r', 'utf-8') as f:
     readme = f.read()
 
 
-# Use latest_tweets.VERSION for version numbers
-version_tuple = __import__('latest_tweets').VERSION
-version = '.'.join([str(v) for v in version_tuple])
-
 setup(
     name='django-latest-tweets',
-    version=version,
+    version='0.4',
     description='Latest Tweets for Django',
     long_description=readme,
     url='https://github.com/blancltd/django-latest-tweets',
