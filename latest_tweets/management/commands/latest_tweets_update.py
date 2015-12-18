@@ -30,7 +30,9 @@ def update_user(user):
         tweet_id_list.append(i.id)
 
     # Remove any deleted tweets in our date range
-    Tweet.objects.filter(user=user, created__gt=oldest_date).exclude(id__in=tweet_id_list).delete()
+    if oldest_date is not None:
+        Tweet.objects.filter(
+            user=user, created__gt=oldest_date).exclude(id__in=tweet_id_list).delete()
 
 
 class Command(BaseCommand):
