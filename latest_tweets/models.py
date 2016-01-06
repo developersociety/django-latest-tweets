@@ -5,12 +5,27 @@ from django.utils.encoding import python_2_unicode_compatible
 
 
 @python_2_unicode_compatible
+class Hashtag(models.Model):
+    text = models.CharField(max_length=140, unique=True)
+
+    class Meta:
+        ordering = ('text',)
+
+    def __str__(self):
+        return self.text
+
+    def get_absolute_url(self):
+        return 'https://twitter.com/hashtag/%s' % (self.text,)
+
+
+@python_2_unicode_compatible
 class Tweet(models.Model):
     tweet_id = models.BigIntegerField('Tweet ID', unique=True)
     user = models.CharField(max_length=15, db_index=True)
     name = models.CharField(max_length=20)
     text = models.CharField(max_length=250)
     html = models.TextField('HTML')
+    hashtags = models.ManyToManyField(Hashtag, blank=True)
     favorite_count = models.PositiveIntegerField(default=0)
     retweet_count = models.PositiveIntegerField(default=0)
     retweeted_username = models.CharField(max_length=20, blank=True)

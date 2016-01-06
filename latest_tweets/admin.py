@@ -25,8 +25,9 @@ class TweetAdmin(admin.ModelAdmin):
     list_filter = ('created', 'user')
     date_hierarchy = 'created'
     readonly_fields = (
-        'tweet_id', 'user', 'name', 'text', 'tweet_html', 'favorite_count', 'retweet_count',
-        'retweeted_username', 'retweeted_name', 'retweeted_tweet_id', 'is_reply', 'created')
+        'tweet_id', 'user', 'name', 'text', 'tweet_html', 'hashtags', 'favorite_count',
+        'retweet_count', 'retweeted_username', 'retweeted_name', 'retweeted_tweet_id', 'is_reply',
+        'created')
     fieldsets = (
         (None, {
             'fields': readonly_fields,
