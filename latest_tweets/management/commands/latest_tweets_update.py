@@ -36,8 +36,13 @@ def update_user(user):
 
 
 class Command(BaseCommand):
-    args = 'user [user ...]'
+    help = 'Download and store the latest tweets of followed users'
 
-    def handle(self, *args, **options):
-        for i in args:
-            update_user(i)
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'users', metavar='user', nargs='+',
+            help='Twitter username to update')
+
+    def handle(self, **options):
+        for user in options['users']:
+            update_user(user=user)

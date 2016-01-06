@@ -13,5 +13,7 @@ def get_auth_tokens(stdout):
 
 
 class Command(BaseCommand):
-    def handle(self, *args, **options):
+    help = 'Generate OAuth tokens/secret needed for Twitter'
+
+    def handle(self, **options):
         get_auth_tokens(self.stdout)
