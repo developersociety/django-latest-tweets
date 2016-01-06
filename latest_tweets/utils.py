@@ -10,7 +10,7 @@ from django.utils.timezone import utc
 from PIL import Image
 import requests
 
-from .models import Photo, Tweet
+from .models import Like, Photo, Tweet
 
 
 HASHTAG_HTML = '<a href="https://twitter.com/hashtag/{text}" target="_blank">#{text}</a>'
@@ -143,5 +143,14 @@ def update_tweets(messages, tweet_entities=tweet_html_entities, download=False):
         tweet_photos(obj=obj, media=i['entities'].get('media', []), download=download)
 
         obj_list.append(obj)
+
+    return obj_list
+
+
+def update_likes(user, messages, download=False):
+    obj_list = update_tweets(messages=messages, download=download)
+
+    for tweet in obj_list:
+        Like.objects.get_or_create(user=user, tweet=tweet)
 
     return obj_list

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Photo, Tweet
+from .models import Like, Photo, Tweet
 
 
 class PhotoInline(admin.StackedInline):
@@ -41,3 +41,17 @@ class TweetAdmin(admin.ModelAdmin):
         return obj.html
     tweet_html.short_description = 'HTML'
     tweet_html.allow_tags = True
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'tweet')
+    readonly_fields = ('user', 'tweet')
+    fieldsets = (
+        (None, {
+            'fields': readonly_fields,
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return False

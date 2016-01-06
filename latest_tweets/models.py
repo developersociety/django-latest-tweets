@@ -64,3 +64,18 @@ class Photo(models.Model):
 
     def large_url(self):
         return '%s:large' % (self.media_url,)
+
+
+@python_2_unicode_compatible
+class Like(models.Model):
+    user = models.CharField(max_length=15)
+    tweet = models.ForeignKey(Tweet)
+
+    class Meta:
+        ordering = ('-tweet',)
+        unique_together = (
+            ('user', 'tweet'),
+        )
+
+    def __str__(self):
+        return '%s' % (self.tweet,)
