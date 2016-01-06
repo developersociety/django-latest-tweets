@@ -8,7 +8,7 @@ from latest_tweets.utils import update_tweets
 
 
 @transaction.atomic
-def update_user(user):
+def update_user(user, download):
     t = Twitter(auth=OAuth(
         settings.TWITTER_OAUTH_TOKEN,
         settings.TWITTER_OAUTH_SECRET,
@@ -16,7 +16,7 @@ def update_user(user):
         settings.TWITTER_CONSUMER_SECRET
     ))
     messages = t.statuses.user_timeline(screen_name=user, include_rts=True)
-    tweet_list = update_tweets(messages=messages)
+    tweet_list = update_tweets(messages=messages, download=download)
 
     # To ensure we delete any deleted tweets
     oldest_date = None
@@ -42,7 +42,10 @@ class Command(BaseCommand):
         parser.add_argument(
             'users', metavar='user', nargs='+',
             help='Twitter username to update')
+        parser.add_argument(
+            '--download-photos', action='store_true',
+            help='Download images from photos and store locally')
 
     def handle(self, **options):
         for user in options['users']:
-            update_user(user=user)
+            update_user(user=user, download=options['download_photos'])

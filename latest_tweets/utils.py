@@ -1,9 +1,14 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+import hashlib
+from tempfile import TemporaryFile
 
+from django.core.files import File
 from django.utils.six.moves import html_parser
 from django.utils.timezone import utc
+from PIL import Image
+import requests
 
 from .models import Photo, Tweet
 
@@ -45,7 +50,7 @@ def tweet_html_entities(tweet, **kwargs):
     return ''.join(text)
 
 
-def tweet_photos(obj, media):
+def tweet_photos(obj, media, download):
     for photo in media:
         # Only photos
         if photo['type'] != 'photo':
@@ -63,8 +68,29 @@ def tweet_photos(obj, media):
             'large_height': int(large['h']),
         })
 
+        if download and not obj.image_file:
+            with TemporaryFile() as temp_file:
+                image_file = File(temp_file)
 
-def update_tweets(messages, tweet_entities=tweet_html_entities):
+                # Download the file
+                r = requests.get(obj.media_url, stream=True)
+                r.raise_for_status()
+
+                for chunk in r.iter_content(4096):
+                    image_file.write(chunk)
+
+                # Get Pillow to look at it
+                image_file.seek(0)
+                pil_image = Image.open(image_file)
+                image_name = '%s.%s' % (
+                    hashlib.md5(obj.media_url.encode()).hexdigest(), pil_image.format.lower())
+
+                # Save the file
+                image_file.seek(0)
+                obj.image_file.save(image_name, image_file, save=True)
+
+
+def update_tweets(messages, tweet_entities=tweet_html_entities, download=False):
     # Need to escape HTML entities
     htmlparser = html_parser.HTMLParser()
     unescape = htmlparser.unescape
@@ -114,7 +140,7 @@ def update_tweets(messages, tweet_entities=tweet_html_entities):
         })
 
         # Add any photos
-        tweet_photos(obj=obj, media=i['entities'].get('media', []))
+        tweet_photos(obj=obj, media=i['entities'].get('media', []), download=download)
 
         obj_list.append(obj)
 

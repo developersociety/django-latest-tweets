@@ -48,6 +48,7 @@ class Photo(models.Model):
     media_url = models.URLField('Media URL')
     large_width = models.PositiveIntegerField()
     large_height = models.PositiveIntegerField()
+    image_file = models.ImageField(upload_to='latest_tweets/photo', blank=True)
 
     class Meta:
         ordering = ('tweet', 'text_index')
