@@ -21,6 +21,7 @@ setup(
         'twitter>=1.9.1',
     ],
     packages=find_packages(),
+    include_package_data=True,
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
