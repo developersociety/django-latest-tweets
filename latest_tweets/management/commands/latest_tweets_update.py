@@ -10,10 +10,10 @@ from latest_tweets.utils import update_likes, update_tweets
 @transaction.atomic
 def update_user_tweets(user, download):
     t = Twitter(auth=OAuth(
-        settings.TWITTER_OAUTH_TOKEN,
-        settings.TWITTER_OAUTH_SECRET,
-        settings.TWITTER_CONSUMER_KEY,
-        settings.TWITTER_CONSUMER_SECRET
+        token=settings.TWITTER_OAUTH_TOKEN,
+        token_secret=settings.TWITTER_OAUTH_SECRET,
+        consumer_key=settings.TWITTER_CONSUMER_KEY,
+        consumer_secret=settings.TWITTER_CONSUMER_SECRET
     ))
     tweet_list = t.statuses.user_timeline(screen_name=user, include_rts=True)
     tweet_objs = update_tweets(tweet_list=tweet_list, download=download)
@@ -38,10 +38,10 @@ def update_user_tweets(user, download):
 @transaction.atomic
 def update_user_likes(user, download):
     t = Twitter(auth=OAuth(
-        settings.TWITTER_OAUTH_TOKEN,
-        settings.TWITTER_OAUTH_SECRET,
-        settings.TWITTER_CONSUMER_KEY,
-        settings.TWITTER_CONSUMER_SECRET
+        token=settings.TWITTER_OAUTH_TOKEN,
+        token_secret=settings.TWITTER_OAUTH_SECRET,
+        consumer_key=settings.TWITTER_CONSUMER_KEY,
+        consumer_secret=settings.TWITTER_CONSUMER_SECRET
     ))
     tweet_list = t.favorites.list(screen_name=user)
     update_likes(user=user, tweet_list=tweet_list, download=download)
