@@ -68,7 +68,7 @@ def tweet_photos(tweet, media, download):
         photo_id = photo['id']
         large = photo['sizes']['large']
 
-        obj, created = Photo.objects.update_or_create(tweet=tweet, photo_id=photo_id, defaults={
+        obj, created = Photo.objects.get_or_create(tweet=tweet, photo_id=photo_id, defaults={
             'text': photo['display_url'],
             'text_index': photo['indices'][0],
             'url': photo['url'],
@@ -134,7 +134,7 @@ def update_tweets(messages, tweet_entities=tweet_html_entities, download=False):
 
         tweet_text = unescape(tweet_text)
 
-        obj, created = Tweet.objects.update_or_create(tweet_id=tweet_id, defaults={
+        obj, created = Tweet.objects.get_or_create(tweet_id=tweet_id, defaults={
             'user': tweet_username,
             'name': tweet_name,
             'text': tweet_text,
@@ -148,11 +148,26 @@ def update_tweets(messages, tweet_entities=tweet_html_entities, download=False):
             'created': tweet_created,
         })
 
-        # Add hashtags
-        tweet_hashtags(tweet=obj, hashtags=i['entities'].get('hashtags', []))
+        if created:
+            # Add hashtags
+            tweet_hashtags(tweet=obj, hashtags=i['entities'].get('hashtags', []))
 
-        # Add any photos
-        tweet_photos(tweet=obj, media=i['entities'].get('media', []), download=download)
+            # Add any photos
+            tweet_photos(tweet=obj, media=i['entities'].get('media', []), download=download)
+        else:
+            # Update counts, but try to avoid excessive updates
+            update_fields = []
+
+            if obj.favorite_count != favorite_count:
+                obj.favorite_count = favorite_count
+                update_fields.append('favorite_count')
+
+            if obj.retweet_count != retweet_count:
+                obj.retweet_count = retweet_count
+                update_fields.append('retweet_count')
+
+            if update_fields:
+                obj.save(update_fields=update_fields)
 
         obj_list.append(obj)
 
