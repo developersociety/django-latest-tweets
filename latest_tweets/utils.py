@@ -99,38 +99,38 @@ def tweet_photos(tweet, media, download):
                 obj.image_file.save(image_name, image_file, save=True)
 
 
-def update_tweets(messages, tweet_entities=tweet_html_entities, download=False):
+def update_tweets(tweet_list, tweet_entities=tweet_html_entities, download=False):
     # Need to escape HTML entities
     htmlparser = html_parser.HTMLParser()
     unescape = htmlparser.unescape
 
     obj_list = []
 
-    for i in messages:
-        tweet_id = i['id']
-        tweet_username = i['user']['screen_name']
-        tweet_name = i['user']['name']
+    for tweet in tweet_list:
+        tweet_id = tweet['id']
+        tweet_username = tweet['user']['screen_name']
+        tweet_name = tweet['user']['name']
         tweet_created = datetime.strptime(
-            i['created_at'], '%a %b %d %H:%M:%S +0000 %Y'
+            tweet['created_at'], '%a %b %d %H:%M:%S +0000 %Y'
         ).replace(tzinfo=utc)
-        tweet_is_reply = i['in_reply_to_screen_name'] is not None
+        tweet_is_reply = tweet['in_reply_to_screen_name'] is not None
 
-        if 'retweeted_status' in i:
-            retweeted_username = i['retweeted_status']['user']['screen_name']
-            retweeted_name = i['retweeted_status']['user']['name']
-            retweeted_tweet_id = i['retweeted_status']['id']
-            tweet_text = i['retweeted_status']['text']
-            tweet_html = tweet_entities(tweet_text, **i['retweeted_status']['entities'])
-            favorite_count = i['retweeted_status']['favorite_count']
-            retweet_count = i['retweeted_status']['retweet_count']
+        if 'retweeted_status' in tweet:
+            retweeted_username = tweet['retweeted_status']['user']['screen_name']
+            retweeted_name = tweet['retweeted_status']['user']['name']
+            retweeted_tweet_id = tweet['retweeted_status']['id']
+            tweet_text = tweet['retweeted_status']['text']
+            tweet_html = tweet_entities(tweet_text, **tweet['retweeted_status']['entities'])
+            favorite_count = tweet['retweeted_status']['favorite_count']
+            retweet_count = tweet['retweeted_status']['retweet_count']
         else:
             retweeted_username = ''
             retweeted_name = ''
             retweeted_tweet_id = None
-            tweet_text = i['text']
-            tweet_html = tweet_entities(tweet_text, **i['entities'])
-            favorite_count = i['favorite_count']
-            retweet_count = i['retweet_count']
+            tweet_text = tweet['text']
+            tweet_html = tweet_entities(tweet_text, **tweet['entities'])
+            favorite_count = tweet['favorite_count']
+            retweet_count = tweet['retweet_count']
 
         tweet_text = unescape(tweet_text)
 
@@ -150,10 +150,10 @@ def update_tweets(messages, tweet_entities=tweet_html_entities, download=False):
 
         if created:
             # Add hashtags
-            tweet_hashtags(tweet=obj, hashtags=i['entities'].get('hashtags', []))
+            tweet_hashtags(tweet=obj, hashtags=tweet['entities'].get('hashtags', []))
 
             # Add any photos
-            tweet_photos(tweet=obj, media=i['entities'].get('media', []), download=download)
+            tweet_photos(tweet=obj, media=tweet['entities'].get('media', []), download=download)
         else:
             # Update counts, but try to avoid excessive updates
             update_fields = []
@@ -174,8 +174,8 @@ def update_tweets(messages, tweet_entities=tweet_html_entities, download=False):
     return obj_list
 
 
-def update_likes(user, messages, download=False):
-    obj_list = update_tweets(messages=messages, download=download)
+def update_likes(user, tweet_list, download=False):
+    obj_list = update_tweets(tweet_list=tweet_list, download=download)
 
     for tweet in obj_list:
         Like.objects.get_or_create(user=user, tweet=tweet)

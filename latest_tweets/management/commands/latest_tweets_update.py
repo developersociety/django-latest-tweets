@@ -15,19 +15,19 @@ def update_user_tweets(user, download):
         settings.TWITTER_CONSUMER_KEY,
         settings.TWITTER_CONSUMER_SECRET
     ))
-    messages = t.statuses.user_timeline(screen_name=user, include_rts=True)
-    tweet_list = update_tweets(messages=messages, download=download)
+    tweet_list = t.statuses.user_timeline(screen_name=user, include_rts=True)
+    tweet_objs = update_tweets(tweet_list=tweet_list, download=download)
 
     # To ensure we delete any deleted tweets
     oldest_date = None
     tweet_id_list = []
 
-    for i in tweet_list:
+    for tweet in tweet_objs:
         # Help prune out deleted tweets
-        if not oldest_date or i.created < oldest_date:
-            oldest_date = i.created
+        if not oldest_date or tweet.created < oldest_date:
+            oldest_date = tweet.created
 
-        tweet_id_list.append(i.id)
+        tweet_id_list.append(tweet.id)
 
     # Remove any deleted tweets in our date range
     if oldest_date is not None:
@@ -43,8 +43,8 @@ def update_user_likes(user, download):
         settings.TWITTER_CONSUMER_KEY,
         settings.TWITTER_CONSUMER_SECRET
     ))
-    messages = t.favorites.list(screen_name=user)
-    update_likes(user=user, messages=messages, download=download)
+    tweet_list = t.favorites.list(screen_name=user)
+    update_likes(user=user, tweet_list=tweet_list, download=download)
 
 
 class Command(BaseCommand):
