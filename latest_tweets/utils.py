@@ -50,16 +50,16 @@ def tweet_html_entities(tweet, **kwargs):
     return ''.join(text)
 
 
-def tweet_hashtags(obj, hashtags):
+def tweet_hashtags(tweet, hashtags):
     for hashtag in hashtags:
         text = hashtag['text'].lower()
 
         tag, created = Hashtag.objects.get_or_create(text=text)
 
-        obj.hashtags.add(tag)
+        tweet.hashtags.add(tag)
 
 
-def tweet_photos(obj, media, download):
+def tweet_photos(tweet, media, download):
     for photo in media:
         # Only photos
         if photo['type'] != 'photo':
@@ -68,7 +68,7 @@ def tweet_photos(obj, media, download):
         photo_id = photo['id']
         large = photo['sizes']['large']
 
-        obj, created = Photo.objects.update_or_create(tweet=obj, photo_id=photo_id, defaults={
+        obj, created = Photo.objects.update_or_create(tweet=tweet, photo_id=photo_id, defaults={
             'text': photo['display_url'],
             'text_index': photo['indices'][0],
             'url': photo['url'],
@@ -149,10 +149,10 @@ def update_tweets(messages, tweet_entities=tweet_html_entities, download=False):
         })
 
         # Add hashtags
-        tweet_hashtags(obj=obj, hashtags=i['entities'].get('hashtags', []))
+        tweet_hashtags(tweet=obj, hashtags=i['entities'].get('hashtags', []))
 
         # Add any photos
-        tweet_photos(obj=obj, media=i['entities'].get('media', []), download=download)
+        tweet_photos(tweet=obj, media=i['entities'].get('media', []), download=download)
 
         obj_list.append(obj)
 
