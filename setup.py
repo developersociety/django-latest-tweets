@@ -10,7 +10,7 @@ with open('README.rst', 'r', 'utf-8') as f:
 
 setup(
     name='django-latest-tweets',
-    version='0.4.2',
+    version='0.4.3',
     description='Latest Tweets for Django',
     long_description=readme,
     url='https://github.com/blancltd/django-latest-tweets',
