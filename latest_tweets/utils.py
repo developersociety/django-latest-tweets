@@ -181,3 +181,13 @@ def update_likes(user, tweet_list, download=False):
         Like.objects.get_or_create(user=user, tweet=tweet)
 
     return obj_list
+
+def update_hashtag(user, tweet_list, download=False):
+    for tweet in tweet_list:
+        hashtag = Hashtag()
+        hashtag.text = tweet["text"].encode("utf8")
+        hashtag.save()
+
+    hashtags = Hashtag.objects.all()
+
+    return hashtags
