@@ -1,7 +1,10 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from twitter import OAuth, Twitter
+from twitter.api import TwitterHTTPError
 
 from latest_tweets.models import Tweet
 from latest_tweets.utils import update_likes, update_tweets
@@ -68,4 +71,15 @@ class Command(BaseCommand):
             update_user = update_user_tweets
 
         for user in options['users']:
-            update_user(user=user, download=options['download_photos'])
+            try:
+                update_user(user=user, download=options['download_photos'])
+            except TwitterHTTPError as http_error:
+                # Fail quietly on any temporary server error codes. This should avoid raising
+                # exceptions when Twitter has temporary HTTP server problems, but network/DNS
+                # issues should still reraise an exception as that could be an error on our side.
+                if http_error.e.code in (500, 502, 503, 504):
+                    self.stderr.write(
+                        'Update failed for {} (HTTP {})'.format(user, http_error.e.code),
+                    )
+                else:
+                    raise
