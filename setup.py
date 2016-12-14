@@ -19,6 +19,7 @@ setup(
     platforms=['any'],
     install_requires=[
         'twitter>=1.9.1',
+        'requests>=2.0',
     ],
     packages=find_packages(),
     include_package_data=True,
