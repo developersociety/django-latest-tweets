@@ -7,8 +7,22 @@ from twitter import OAuth, Twitter
 from twitter.api import TwitterHTTPError
 
 from latest_tweets.models import Tweet
-from latest_tweets.utils import update_likes, update_tweets
+from latest_tweets.utils import update_likes, update_tweets, update_hashtag
 
+
+@transaction.atomic
+def update_hashtag_tweets(user, download):
+    t = Twitter(auth=OAuth(
+        token=settings.TWITTER_OAUTH_TOKEN,
+        token_secret=settings.TWITTER_OAUTH_SECRET,
+        consumer_key=settings.TWITTER_CONSUMER_KEY,
+        consumer_secret=settings.TWITTER_CONSUMER_SECRET
+    ))
+
+    # Search for latest tweets using hashtag
+    tweet_list = t.search.tweets(q='#' + user)
+
+    update_hashtag(user=user, tweet_list=tweet_list["statuses"], download=download)
 
 @transaction.atomic
 def update_user_tweets(user, download):
@@ -63,10 +77,15 @@ class Command(BaseCommand):
         parser.add_argument(
             '--likes', action='store_true',
             help='Retrieve the list of liked tweets instead of the users tweets')
+        parser.add_argument(
+            '--hashtag', action='store_true',
+            help='Retrieve the list of hashtag tweets instead of the users tweets')
 
     def handle(self, **options):
         if options['likes']:
             update_user = update_user_likes
+        elif options['hashtag']:
+            update_user = update_hashtag_tweets
         else:
             update_user = update_user_tweets
 

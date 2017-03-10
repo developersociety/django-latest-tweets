@@ -6,7 +6,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class Hashtag(models.Model):
-    text = models.CharField(max_length=140, unique=True)
+    text = models.CharField(max_length=140)
 
     class Meta:
         ordering = ('text',)
