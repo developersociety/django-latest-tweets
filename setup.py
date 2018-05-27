@@ -13,7 +13,7 @@ setup(
     version='0.4.5',
     description='Latest Tweets for Django',
     long_description=readme,
-    url='https://github.com/blancltd/django-latest-tweets',
+    url='https://github.com/developersociety/django-latest-tweets',
     maintainer='Blanc Ltd',
     maintainer_email='studio@blanc.ltd.uk',
     platforms=['any'],
