@@ -55,7 +55,7 @@ class Tweet(models.Model):
 
 @python_2_unicode_compatible
 class Photo(models.Model):
-    tweet = models.ForeignKey(Tweet, related_name='photos')
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='photos')
     photo_id = models.BigIntegerField('Photo ID')
     text = models.CharField(max_length=250)
     text_index = models.PositiveIntegerField(db_index=True)
@@ -84,7 +84,7 @@ class Photo(models.Model):
 @python_2_unicode_compatible
 class Like(models.Model):
     user = models.CharField(max_length=15)
-    tweet = models.ForeignKey(Tweet)
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-tweet',)

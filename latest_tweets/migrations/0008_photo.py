@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('media_url', models.URLField(verbose_name='Media URL')),
                 ('large_width', models.PositiveIntegerField()),
                 ('large_height', models.PositiveIntegerField()),
-                ('tweet', models.ForeignKey(related_name='photos', to='latest_tweets.Tweet')),
+                ('tweet', models.ForeignKey(related_name='photos', to='latest_tweets.Tweet', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('tweet', 'text_index'),

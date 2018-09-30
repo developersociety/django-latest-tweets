@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, verbose_name='ID', serialize=False)),
                 ('user', models.CharField(max_length=15)),
-                ('tweet', models.ForeignKey(to='latest_tweets.Tweet')),
+                ('tweet', models.ForeignKey(to='latest_tweets.Tweet', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('-tweet',),
