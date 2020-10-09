@@ -5,11 +5,14 @@ from .models import Like, Photo, Tweet
 
 class PhotoInline(admin.StackedInline):
     model = Photo
-    readonly_fields = ('photo_id', 'url', 'media_url', 'large_width', 'large_height')
+    readonly_fields = ("photo_id", "url", "media_url", "large_width", "large_height")
     fieldsets = (
-        (None, {
-            'fields': readonly_fields,
-        }),
+        (
+            None,
+            {
+                "fields": readonly_fields,
+            },
+        ),
     )
 
     def has_add_permission(self, request, obj=None):
@@ -21,17 +24,31 @@ class PhotoInline(admin.StackedInline):
 
 @admin.register(Tweet)
 class TweetAdmin(admin.ModelAdmin):
-    list_display = ('user', 'text', 'created')
-    list_filter = ('created', 'user')
-    date_hierarchy = 'created'
+    list_display = ("user", "text", "created")
+    list_filter = ("created", "user")
+    date_hierarchy = "created"
     readonly_fields = (
-        'tweet_id', 'user', 'name', 'text', 'tweet_html', 'hashtags', 'favorite_count',
-        'retweet_count', 'retweeted_username', 'retweeted_name', 'retweeted_tweet_id', 'is_reply',
-        'created')
+        "tweet_id",
+        "user",
+        "name",
+        "text",
+        "tweet_html",
+        "hashtags",
+        "favorite_count",
+        "retweet_count",
+        "retweeted_username",
+        "retweeted_name",
+        "retweeted_tweet_id",
+        "is_reply",
+        "created",
+    )
     fieldsets = (
-        (None, {
-            'fields': readonly_fields,
-        }),
+        (
+            None,
+            {
+                "fields": readonly_fields,
+            },
+        ),
     )
     inlines = [PhotoInline]
 
@@ -40,18 +57,22 @@ class TweetAdmin(admin.ModelAdmin):
 
     def tweet_html(self, obj):
         return obj.html
-    tweet_html.short_description = 'HTML'
+
+    tweet_html.short_description = "HTML"
     tweet_html.allow_tags = True
 
 
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'tweet')
-    readonly_fields = ('user', 'tweet')
+    list_display = ("user", "tweet")
+    readonly_fields = ("user", "tweet")
     fieldsets = (
-        (None, {
-            'fields': readonly_fields,
-        }),
+        (
+            None,
+            {
+                "fields": readonly_fields,
+            },
+        ),
     )
 
     def has_add_permission(self, request):

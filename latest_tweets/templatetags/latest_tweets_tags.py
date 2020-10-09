@@ -1,5 +1,6 @@
 import django
 from django import template
+
 from latest_tweets.models import Hashtag, Tweet
 
 register = template.Library()
@@ -13,10 +14,10 @@ else:
 
 @assignment_tag
 def get_latest_tweets(*args, **kwargs):
-    limit = kwargs.pop('limit', None)
-    include_replies = kwargs.pop('include_replies', False)
-    liked_by = kwargs.pop('liked_by', None)
-    hashtag = kwargs.pop('hashtag', None)
+    limit = kwargs.pop("limit", None)
+    include_replies = kwargs.pop("include_replies", False)
+    liked_by = kwargs.pop("liked_by", None)
+    hashtag = kwargs.pop("hashtag", None)
     tweets = Tweet.objects.all()
 
     #  By default we exclude replies
