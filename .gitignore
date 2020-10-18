@@ -1,5 +1,12 @@
-*.egg-info
 *.pyc
-build
-dist
 MANIFEST
+dist
+build
+*.egg-info
+
+# Tox
+.tox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/

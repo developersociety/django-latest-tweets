@@ -1,0 +1,7 @@
+[run]
+branch = true
+parallel = true
+include =
+    latest_tweets/*
+omit =
+    latest_tweets/migrations/*
