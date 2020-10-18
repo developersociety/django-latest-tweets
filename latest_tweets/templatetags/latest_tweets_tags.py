@@ -1,4 +1,3 @@
-import django
 from django import template
 
 from latest_tweets.models import Hashtag, Tweet
@@ -6,13 +5,7 @@ from latest_tweets.models import Hashtag, Tweet
 register = template.Library()
 
 
-if django.VERSION >= (1, 9):
-    assignment_tag = register.simple_tag
-else:
-    assignment_tag = register.assignment_tag
-
-
-@assignment_tag
+@register.simple_tag
 def get_latest_tweets(*args, **kwargs):
     limit = kwargs.pop("limit", None)
     include_replies = kwargs.pop("include_replies", False)

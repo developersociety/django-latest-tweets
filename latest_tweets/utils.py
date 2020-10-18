@@ -1,11 +1,9 @@
-from __future__ import unicode_literals
-
 import hashlib
 from datetime import datetime
+from html import unescape
 from tempfile import TemporaryFile
 
 from django.core.files import File
-from django.utils.six.moves import html_parser
 from django.utils.timezone import utc
 
 import requests
@@ -106,10 +104,6 @@ def tweet_photos(tweet, media, download):
 
 
 def update_tweets(tweet_list, tweet_entities=tweet_html_entities, download=False):
-    # Need to escape HTML entities
-    htmlparser = html_parser.HTMLParser()
-    unescape = htmlparser.unescape
-
     obj_list = []
 
     for tweet in tweet_list:

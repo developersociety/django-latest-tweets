@@ -1,10 +1,6 @@
-from __future__ import unicode_literals
-
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class Hashtag(models.Model):
     text = models.CharField(max_length=140, unique=True)
 
@@ -15,10 +11,9 @@ class Hashtag(models.Model):
         return self.text
 
     def get_absolute_url(self):
-        return "https://twitter.com/hashtag/%s" % (self.text,)
+        return "https://twitter.com/hashtag/{}".format(self.text)
 
 
-@python_2_unicode_compatible
 class Tweet(models.Model):
     tweet_id = models.BigIntegerField("Tweet ID", unique=True)
     user = models.CharField(max_length=15, db_index=True)
@@ -38,22 +33,21 @@ class Tweet(models.Model):
         ordering = ("-created",)
 
     def __str__(self):
-        return "@%s - %s" % (self.user, self.text)
+        return "@{} - {}".format(self.user, self.text)
 
     def get_absolute_url(self):
-        return "https://twitter.com/%s/status/%s" % (self.user, self.tweet_id)
+        return "https://twitter.com/{}/status/{}".format(self.user, self.tweet_id)
 
     def user_url(self):
-        return "https://twitter.com/%s" % (self.user,)
+        return "https://twitter.com/{}".format(self.user)
 
     def retweeted_user_url(self):
         if self.retweeted_username:
-            return "https://twitter.com/%s" % (self.retweeted_username,)
+            return "https://twitter.com/{}".format(self.retweeted_username)
         else:
             return None
 
 
-@python_2_unicode_compatible
 class Photo(models.Model):
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name="photos")
     photo_id = models.BigIntegerField("Photo ID")
@@ -76,10 +70,9 @@ class Photo(models.Model):
         return self.url
 
     def large_url(self):
-        return "%s:large" % (self.media_url,)
+        return "{}:large".format(self.media_url)
 
 
-@python_2_unicode_compatible
 class Like(models.Model):
     user = models.CharField(max_length=15)
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
@@ -89,4 +82,4 @@ class Like(models.Model):
         unique_together = (("user", "tweet"),)
 
     def __str__(self):
-        return "%s" % (self.tweet,)
+        return str(self.tweet)
