@@ -22,8 +22,8 @@ setup(
     python_requires=">=3.5",
     install_requires=[
         "Django>=1.11",
-        "twitter>=1.9.1",
-        "requests>=2.0",
+        "twitter>=1.18.0",
+        "requests>=2.20.0",
     ],
     packages=find_packages(exclude=["tests"]),
     include_package_data=True,
