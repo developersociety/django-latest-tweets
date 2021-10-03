@@ -138,10 +138,10 @@ coverage-clean:
 
 # Black
 black-lint:
-	black --line-length 99 --target-version py35 --exclude '/migrations/' --check latest_tweets tests setup.py
+	black --check latest_tweets tests setup.py
 
 black-format:
-	black --line-length 99 --target-version py35 --exclude '/migrations/' latest_tweets tests setup.py
+	black latest_tweets tests setup.py
 
 
 #pipdeptree
