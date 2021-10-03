@@ -55,7 +55,10 @@ jobs:
         django:
           - '1.11'
           - '2.2'
+          - '3.2'
         exclude:
+          - python: '3.5'
+            django: '3.2'
           - python: '3.8'
             django: '1.11'
           - python: '3.9'
