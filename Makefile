@@ -151,7 +151,7 @@ pipdeptree-check:
 
 # Project testing
 django-test:
-	coverage run $$(which django-admin) test --pythonpath $$(pwd) --settings tests.settings tests
+	PYTHONWARNINGS=all coverage run $$(which django-admin) test --pythonpath $$(pwd) --settings tests.settings tests
 
 
 # Help
