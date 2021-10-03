@@ -106,10 +106,10 @@ pip-install-local: venv-check
 
 # ISort
 isort-lint:
-	isort --recursive --check-only --diff latest_tweets tests
+	isort --check-only --diff latest_tweets tests
 
 isort-format:
-	isort --recursive latest_tweets tests
+	isort latest_tweets tests
 
 
 # Flake8
