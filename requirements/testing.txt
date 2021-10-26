@@ -3,6 +3,6 @@ coverage==5.5
 flake8==3.9.2
 isort==5.9.3 ; python_version >= '3.6'
 Pillow==7.2.0
-pipdeptree==2.1.0
+pipdeptree==2.2.0
 requests==2.25.1
 twitter==1.18.0
