@@ -1,84 +1,51 @@
 name: CI
 on: pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 jobs:
-  check:
-    name: Check
+  matrix:
+    name: Build test matrix
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Python pip cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements/testing.txt') }}
-      - name: Run check
+          cache: 'pip'
+          cache-dependency-path: 'requirements/*.txt'
+      - name: Run tox
+        id: matrix
         run: |
-          pip install tox
-          tox -e check
-
-  lint:
-    name: Lint
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - name: Python pip cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements/testing.txt') }}
-      - name: Run lint
-        run: |
-          pip install tox
-          tox -e lint
+          pip install $(grep "^tox==" requirements/local.txt)
+          echo "tox_matrix=$(tox -l | fgrep -v coverage | python .github/matrix.py)" >> "$GITHUB_OUTPUT"
+    outputs:
+      tox_matrix: ${{ steps.matrix.outputs.tox_matrix }}
 
   test:
-    name: Test -- Python ${{ matrix.python }} - Django ${{ matrix.django }}
+    name: Test -- ${{ matrix.tox_env }}
     runs-on: ubuntu-20.04
+    needs: matrix
     strategy:
       matrix:
-        python:
-          - '3.5'
-          - '3.6'
-          - '3.7'
-          - '3.8'
-          - '3.9'
-        django:
-          - '1.11'
-          - '2.2'
-          - '3.2'
-        exclude:
-          - python: '3.5'
-            django: '3.2'
-          - python: '3.8'
-            django: '1.11'
-          - python: '3.9'
-            django: '1.11'
+        include: ${{ fromJson(needs.matrix.outputs.tox_matrix) }}
       fail-fast: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
-      - name: Python pip cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-python${{ matrix.python }}-django${{ matrix.django }}-pip-${{ hashFiles('requirements/testing.txt') }}
+          cache: 'pip'
+          cache-dependency-path: 'requirements/*.txt'
       - name: Run tests
-        env:
-          PYTHON_VERSION: ${{ matrix.python }}
         run: |
-          pip install tox
-          tox -e py${PYTHON_VERSION//./}-django${{ matrix.django }}
+          pip install $(grep "^tox==" requirements/local.txt)
+          tox -e ${{ matrix.tox_env }}
