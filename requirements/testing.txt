@@ -1,8 +1,8 @@
-black==22.3.0 ; python_version >= '3.6'
+black==22.8.0 ; python_version >= '3.6'
 coverage==5.5
 flake8==3.9.2
-isort==5.9.3 ; python_version >= '3.6'
+isort==5.10.1 ; python_version >= '3.6'
 Pillow==7.2.0
-pipdeptree==2.2.0
+pipdeptree==2.2.1
 requests==2.25.1
 twitter==1.18.0
