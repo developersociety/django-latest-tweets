@@ -11,7 +11,7 @@ def read(filename):
 
 setup(
     name="django-latest-tweets",
-    version="0.4.6",
+    version="0.4.7",
     description="Latest Tweets for Django",
     long_description=read("README.rst"),
     long_description_content_type="text/x-rst",

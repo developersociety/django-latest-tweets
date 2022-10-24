@@ -1,6 +1,6 @@
 import django
 
-__version__ = "0.4.6"
+__version__ = "0.4.7"
 
 
 if django.VERSION < (3, 2):
